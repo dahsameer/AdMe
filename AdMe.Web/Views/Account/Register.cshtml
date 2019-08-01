@@ -1,0 +1,38 @@
+﻿@model AdMe.Model.User.UserRegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+    Layout = "~/Views/Shared/_Account.cshtml";
+}
+
+<h2 class="text-white">Register</h2>
+<div class="line-divider"></div>
+<div class="form-wrapper">
+    <form id="RegisterForm" asp-controller="Account" asp-action="Register">
+        <fieldset class="form-group">
+            <input asp-for="Fullname" class="form-control" placeholder="Enter your name" />
+            <span asp-validation-for="Fullname" class="text-white small"></span>
+        </fieldset>
+        <fieldset class="form-group">
+            <input asp-for="Email" class="form-control" placeholder="Enter your email" />
+            <span asp-validation-for="Email" class="text-white small"></span>
+        </fieldset>
+        <fieldset class="form-group">
+            <input asp-for="Username" class="form-control" placeholder="Enter an Username" />
+            <span asp-validation-for="Username" class="text-white small"></span>
+        </fieldset>
+        <fieldset class="form-group">
+            <input asp-for="Password" class="form-control" placeholder="Enter password" />
+            <span asp-validation-for="Password" class="text-white small"></span>
+        </fieldset>
+        <fieldset class="form-group">
+            <input asp-for="ConfirmPassword" class="form-control" placeholder="Enter password again" />
+            <span asp-validation-for="ConfirmPassword" class="text-white small"></span>
+        </fieldset>
+        <fieldset class="form-group">
+            <input type="date" asp-for="DateOfBirth" class="form-control" />
+            <span asp-validation-for="DateOfBirth" class="text-white small"></span>
+        </fieldset>
+        <button type="submit" class="btn-secondary">Signup</button>
+    </form>
+</div>
+<a href="/Account/Login">Already have an account?</a>

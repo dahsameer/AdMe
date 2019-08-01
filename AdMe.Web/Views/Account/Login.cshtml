@@ -1,0 +1,22 @@
+﻿@model AdMe.Model.User.UserLoginViewModel
+@{
+    ViewData["Title"] = "Login";
+    Layout = "~/Views/Shared/_Account.cshtml";
+}
+
+<h2 class="text-white">Login</h2>
+<div class="line-divider"></div>
+<div class="form-wrapper">
+    <form asp-controller="Account" asp-action="Login" method="post">
+        <fieldset class="form-group">
+            <input asp-for="Username" class="form-control" placeholder="Enter Username">
+            <span asp-validation-for="Username" class="text-white small"></span>
+        </fieldset>
+        <fieldset class="form-group">
+            <input asp-for="Password" class="form-control" placeholder="Enter password">
+            <span asp-validation-for="Password" class="text-white small"></span>
+        </fieldset>
+        <button type="submit" class="btn-secondary">Login</button>
+    </form>
+</div>
+<a href="/Account/Register">Don't have an account?</a>
