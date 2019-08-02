@@ -7,7 +7,7 @@ namespace AdMe.Repository.Account
 {
     public interface IAccountService
     {
-        Task<DbResponse> AddUser(UserRegisterViewModel model);
-        Task<DbResponse> CheckUser(UserLoginViewModel model);
+        DbResponse AddUser(UserRegisterViewModel model);
+        DbResponse CheckUser(UserLoginViewModel model);
     }
 }

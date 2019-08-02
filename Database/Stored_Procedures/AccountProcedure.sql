@@ -9,7 +9,7 @@ CREATE OR ALTER PROCEDURE AccountProcedure
 						  @Gender       nvarchar(10)  = NULL, 
 						  @DateOfBirth  date          = NULL, 
 						  @JoinedDate   date          = NULL, 
-						  @PasswordHash nvarchar(200) = NULL, 
+						  @Password     nvarchar(200) = NULL, 
 						  @About        nvarchar(250) = NULL, 
 						  @City         nvarchar(100) = NULL, 
 						  @Country      nvarchar(100) = NULL, 
@@ -22,29 +22,26 @@ BEGIN
 		-------------------------------------Add User Block----------------------------
 		IF @flag = 'AddUser'
 		BEGIN
-			INSERT INTO dbo.tblUser( Username, Fullname, Email, Gender, DateOfBirth, JoinedDate, PasswordHash )
-			VALUES( @Username, @Fullname, @Email, @Gender, @DateOfBirth, GETDATE(), @PasswordHash );
-			SELECT 100 AS Code, 'Register Successfull' AS [Message], '' AS Id;
+			IF EXISTS (SELECT 'A' FROM dbo.tblUser WHERE Username=@Username)
+			BEGIN
+			    SELECT 101 AS Code, 'Username Already taken' AS [Message], '' AS Id;
+			END
+			IF EXISTS (SELECT 'A' FROM dbo.tblUser WHERE Email=@Email)
+			BEGIN
+			    SELECT 101 AS Code, 'Email already registered' AS [Message], '' AS Id;
+			END
+			ELSE
+			BEGIN
+			    INSERT INTO dbo.tblUser( Username, Fullname, Email, Gender, DateOfBirth, JoinedDate, [Password] )
+				VALUES( @Username, @Fullname, @Email, @Gender, @DateOfBirth, GETDATE(), @Password );
+				SELECT 100 AS Code, 'Register Successfull' AS [Message], '' AS Id; 
+			END
 		END;
 		IF @flag = 'CheckUser'
 		BEGIN
-			IF EXISTS
-			(
-				SELECT 'a'
-				FROM dbo.tblUser
-				WHERE Username = @Username OR 
-					  Email = @Email
-			)
+			IF EXISTS (SELECT 'a' FROM dbo.tblUser WHERE Username = @Username)
 			BEGIN
-				IF EXISTS
-				(
-					SELECT 'a'
-					FROM dbo.tblUser
-					WHERE( Username = @Username OR 
-						   Email = @Email
-						 ) AND 
-						 PasswordHash = @PasswordHash
-				)
+				IF EXISTS (SELECT 'a' FROM dbo.tblUser WHERE Username = @Username AND [Password] = @Password)
 				BEGIN
 					SELECT 100 AS Code, 'Login Successfull' AS [Message], '' AS Id;
 				END;

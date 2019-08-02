@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using AdMe.Model;
 using AdMe.Model.StaticModel;
 using AdMe.Model.User;
@@ -15,7 +16,7 @@ namespace AdMe.Repository.Account
             _dapperService = dapperService;
         }
 
-        public async Task<DbResponse> AddUser(UserRegisterViewModel model)
+        public DbResponse AddUser(UserRegisterViewModel model)
         {
             string procedure = "AccountProcedure";
             var param = new
@@ -23,15 +24,15 @@ namespace AdMe.Repository.Account
                 Flag = "AddUser",
                 Username = model.Username,
                 Fullname = model.Fullname,
-                PasswordHash = model.Password,
+                Password = model.Password,
                 DateOfBirth = model.DateOfBirth,
                 Email = model.Email
             };
-            DbResponse response = await _dapperService.ExecuteNonListAsync<DbResponse>(procedure, param);
-            return response;
+            var response = _dapperService.ExecuteQuery<DbResponse>(procedure, param);
+            return response.FirstOrDefault();
         }
 
-        public async Task<DbResponse> CheckUser(UserLoginViewModel model)
+        public DbResponse CheckUser(UserLoginViewModel model)
         {
             string procedure = "AccountProcedure";
             var param = new
@@ -40,7 +41,7 @@ namespace AdMe.Repository.Account
                 Username = model.Username,
                 Password = model.Password
             };
-            DbResponse response = await _dapperService.ExecuteNonListAsync<DbResponse>(procedure, param);
+            DbResponse response = _dapperService.ExecuteQuery<DbResponse>(procedure, param);
             return response;
         }
     }

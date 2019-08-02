@@ -8,6 +8,8 @@ using AdMe.Model.StaticModel;
 using Microsoft.AspNetCore.Mvc;
 using AdMe.Shared.Helpers.StaticSecurity;
 using Microsoft.AspNetCore.Http;
+using AdMe.Shared.Helpers.StaticData;
+using AdMe.Web.Extension;
 
 namespace AdMe.Web.Controllers
 {
@@ -25,10 +27,10 @@ namespace AdMe.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Register(UserRegisterViewModel model)
+        public IActionResult Register(UserRegisterViewModel model)
         {
             model.Password = SHA512Hash.GenerateSHA512String(model.Password);
-            DbResponse response = await _accountService.AddUser(model);
+            DbResponse response = _accountService.AddUser(model);
             if(response == null)
             {
                 ViewBag.Response = "Unknown Error";
@@ -50,9 +52,10 @@ namespace AdMe.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(UserLoginViewModel model)
+        public IActionResult Login(UserLoginViewModel model)
         {
-            DbResponse response = await _accountService.CheckUser(model);
+            model.Password = SHA512Hash.GenerateSHA512String(model.Password);
+            DbResponse response = _accountService.CheckUser(model);
             if(response == null)
             {
                 ViewBag.Response = "Unknown Error";
@@ -60,6 +63,7 @@ namespace AdMe.Web.Controllers
             else if(response.Code == 100)
             {
                 HttpContext.Session.SetString("User", model.Username);
+                HttpContext.Session.SetString("SessionId", RandomStringGenerator.GenerateString());
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -67,6 +71,22 @@ namespace AdMe.Web.Controllers
                 ViewBag.Response = response.Message;
             }
             return View(model);
+        }
+
+        [Authenticate]
+        public IActionResult Logout(string id)
+        {
+            string sessionId = HttpContext.Session.GetString("SessionId");
+            if(sessionId == id)
+            {
+                HttpContext.Session.Remove("User");
+                HttpContext.Session.Remove("SessionId");
+                return Redirect("Login");
+            }
+            else
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
     }
 }
