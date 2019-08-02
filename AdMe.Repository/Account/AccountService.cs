@@ -1,19 +1,27 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
+using System.Linq;
 using System.Threading.Tasks;
 using AdMe.Model;
 using AdMe.Model.StaticModel;
 using AdMe.Model.User;
-using AdMe.Repository.Dapper;
+using Dapper;
+using Microsoft.Extensions.Configuration;
 
 namespace AdMe.Repository.Account
 {
     public class AccountService : IAccountService
     {
-        private IDapperService _dapperService;
+        private readonly IConfiguration _config;
+        private readonly string _connectionString;
+        private readonly IDbConnection _connection;
 
-        public AccountService(IDapperService dapperService)
+        public AccountService(IConfiguration config)
         {
-            _dapperService = dapperService;
+            _config = config;
+            _connectionString = _config.GetConnectionString("DefaultConnection");
+            _connection = new SqlConnection(_connectionString);
         }
 
         public DbResponse AddUser(UserRegisterViewModel model)
@@ -28,8 +36,8 @@ namespace AdMe.Repository.Account
                 DateOfBirth = model.DateOfBirth,
                 Email = model.Email
             };
-            var response = _dapperService.ExecuteQuery<DbResponse>(procedure, param);
-            return response.FirstOrDefault();
+            DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
+            return response;
         }
 
         public DbResponse CheckUser(UserLoginViewModel model)
@@ -41,7 +49,7 @@ namespace AdMe.Repository.Account
                 Username = model.Username,
                 Password = model.Password
             };
-            DbResponse response = _dapperService.ExecuteQuery<DbResponse>(procedure, param);
+            DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
             return response;
         }
     }

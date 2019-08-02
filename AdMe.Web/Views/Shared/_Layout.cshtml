@@ -1,7 +1,6 @@
-﻿@inject Microsoft.AspNetCore.Http.IHttpContextAccessor HttpContextAccessor
-@using Microsoft.AspNetCore.Http
+﻿@using Microsoft.AspNetCore.Http
 @{
-    string SessionId = HttpContextAccessor.HttpContext.Session.GetString("User");
+    string SessionId = Context.Session.GetString("SessionId");
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -56,7 +55,7 @@
                             </ul>
                         </li>
                     </ul>
-                    <form asp-action="Search" asp-controller="Home" class="navbar-form navbar-right hidden-sm">
+                    <form asp-action="Search" asp-controller="Home" class="navbar-form navbar-static-top hidden-sm">
                         <div class="form-group">
                             <i class="icon ion-android-search"></i>
                             <input type="text" class="form-control" placeholder="Search friends, photos, videos">
