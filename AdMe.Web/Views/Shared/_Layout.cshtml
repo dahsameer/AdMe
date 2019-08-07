@@ -48,7 +48,7 @@
                     <ul class="nav navbar-nav navbar-right main-menu">
                         <li class="dropdown"><a href="index.html">Home</a></li>
                         <li class="dropdown">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span><img src="images/down-arrow.png" alt="" /></span></a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Account <span><img src="~/images/down-arrow.png" alt="" /></span></a>
                             <ul class="dropdown-menu newsfeed-home">
                                 <li><a href="newsfeed.html">Edit</a></li>
                                 <li><a href="/Account/Logout/@SessionId">Logout</a></li>
@@ -67,9 +67,7 @@
     </header>
     <!--Header End-->
 
-    <div id="page-contents">
-        @RenderBody()
-    </div>
+    @RenderBody()
 
     <!-- Footer
     ================================================= -->
@@ -86,12 +84,11 @@
 
     <!-- Scripts
     ================================================= -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCTMXfmDn0VlqWIyoOxK8997L-amWbUPiQ&callback=initMap"></script>
-    <script src="js/jquery-3.1.1.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/jquery.sticky-kit.min.js"></script>
-    <script src="js/jquery.scrollbar.min.js"></script>
-    <script src="js/script.js"></script>
+    <script src="~/js/jquery-3.1.1.min.js"></script>
+    <script src="~/js/bootstrap.min.js"></script>
+    <script src="~/js/jquery.sticky-kit.min.js"></script>
+    <script src="~/js/jquery.scrollbar.min.js"></script>
+    <script src="~/js/script.js"></script>
     @RenderSection("Scripts")
 </body>
 </html>

@@ -9,5 +9,6 @@ namespace AdMe.Repository.Account
     {
         DbResponse AddUser(UserRegisterViewModel model);
         DbResponse CheckUser(UserLoginViewModel model);
+        UserProfile GetUserProfile(string username);
     }
 }

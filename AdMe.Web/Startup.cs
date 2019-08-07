@@ -1,5 +1,6 @@
 ﻿using System;
 using AdMe.Repository.Account;
+using AdMe.Repository.Post;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -31,7 +32,7 @@ namespace AdMe.Web
                 options.Cookie.IsEssential = true;
             });
             services.AddTransient<IAccountService, AccountService>();
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<IPostService, PostService>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }

@@ -6,8 +6,8 @@ namespace AdMe.Model.StaticModel
 {
     public class DbResponse
     {
-        public int Code { get; set; }
-        public string Message { get; set; }
-        public string Id { get; set; }
+        public int ResponseCode { get; set; }
+        public string ResponseMessage { get; set; }
+        public string ResponseId { get; set; }
     }
 }

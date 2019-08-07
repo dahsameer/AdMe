@@ -52,5 +52,17 @@ namespace AdMe.Repository.Account
             DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
             return response;
         }
+
+        public UserProfile GetUserProfile(string username)
+        {
+            string procedure = "AccountProcedure";
+            var param = new
+            {
+                Flag = "GetUserProfile",
+                Username = username
+            };
+            UserProfile user = _connection.QueryFirstOrDefault<UserProfile>(procedure, param, commandType: CommandType.StoredProcedure);
+            return user;
+        }
     }
 }

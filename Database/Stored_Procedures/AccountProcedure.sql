@@ -24,17 +24,17 @@ BEGIN
 		BEGIN
 			IF EXISTS (SELECT 'A' FROM dbo.tblUser WHERE Username=@Username)
 			BEGIN
-			    SELECT 101 AS Code, 'Username Already taken' AS [Message], '' AS Id;
+			    SELECT 101 AS ResponseCode, 'Username Already taken' AS ResponseMessage, '' AS ResponseId;
 			END
 			IF EXISTS (SELECT 'A' FROM dbo.tblUser WHERE Email=@Email)
 			BEGIN
-			    SELECT 101 AS Code, 'Email already registered' AS [Message], '' AS Id;
+			    SELECT 101 AS ResponseCode, 'Email already registered' AS ResponseMessage, '' AS ResponseId;
 			END
 			ELSE
 			BEGIN
 			    INSERT INTO dbo.tblUser( Username, Fullname, Email, Gender, DateOfBirth, JoinedDate, [Password] )
 				VALUES( @Username, @Fullname, @Email, @Gender, @DateOfBirth, GETDATE(), @Password );
-				SELECT 100 AS Code, 'Register Successfull' AS [Message], '' AS Id; 
+				SELECT 100 AS ResponseCode, 'Register Successfull' AS ResponseMessage, '' AS ResponseId; 
 			END
 		END;
 		IF @flag = 'CheckUser'
@@ -43,24 +43,31 @@ BEGIN
 			BEGIN
 				IF EXISTS (SELECT 'a' FROM dbo.tblUser WHERE Username = @Username AND [Password] = @Password)
 				BEGIN
-					SELECT 100 AS Code, 'Login Successfull' AS [Message], '' AS Id;
+					SELECT 100 AS ResponseCode, 'Login Successfull' AS ResponseMessage, '' AS ResponseId;
 				END;
 				ELSE
 				BEGIN
-					SELECT 101 AS Code, 'Password did not match' AS [Message], '' AS Id;
+					SELECT 101 AS ResponseCode, 'Password did not match' AS ResponseMessage, '' AS ResponseId;
 				END;
 			END;
 			ELSE
 			BEGIN
-				SELECT 101 AS Code, 'Account not found' AS [Message], '' AS Id;
+				SELECT 101 AS ResponseCode, 'Account not found' AS ResponseMessage, '' AS ResponseId;
 			END;
 		END;
+		IF @Flag = 'GetUserProfile'
+		BEGIN
+			IF EXISTS (SELECT 'A' FROM dbo.tblUser WHERE Username = @Username)
+			BEGIN
+			    SELECT Id, Username, Fullname, Email, Gender, DateOfBirth, JoinedDate, [Password], About, City, Country, Photo FROM dbo.tblUser WHERE Username=@Username
+			END
+		END
 	END TRY
 	BEGIN CATCH
 		IF @@TRANCOUNT > 0
 		BEGIN
 			ROLLBACK;
-			SELECT 102 AS Code, ERROR_MESSAGE() AS Message, '' AS Id;
+			SELECT 102 AS ResponseCode, ERROR_MESSAGE() AS ResponseMessage, '' AS ResponseId;
 		END;
 	END CATCH;
 END;

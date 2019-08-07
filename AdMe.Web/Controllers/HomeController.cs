@@ -14,6 +14,7 @@ namespace AdMe.Web.Controllers
         [Authenticate]
         public IActionResult Index()
         {
+            HttpContext.Session.Remove("SessionId");
             return View();
         }
 

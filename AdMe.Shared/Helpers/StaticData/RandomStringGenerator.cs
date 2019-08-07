@@ -8,18 +8,29 @@ namespace AdMe.Shared.Helpers.StaticData
     public class RandomStringGenerator
     {
         private static Random random = new Random();
-        public static string GenerateString(int length=20, string type="alphanumeric")
+        public enum RandomStringType
+        {
+            ALPHANUMERIC, NUMERIC, APHABETIC
+        };
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="The length of the string to return"></param>
+        /// <param name="typeof alpha"></param>
+        /// <returns></returns>
+        public static string GenerateString(int length=20, RandomStringType type = RandomStringType.ALPHANUMERIC)
         {
             string chars;
             switch (type)
             {
-                case "alphabetic":
+                case RandomStringType.APHABETIC:
                     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
                     break;
-                case "numeric":
+                case RandomStringType.NUMERIC:
                     chars = "0123456789";
                     break;
-                case "alphanumeric":
+                case RandomStringType.ALPHANUMERIC:
                 default:
                     chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
                     break;

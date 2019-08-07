@@ -35,13 +35,13 @@ namespace AdMe.Web.Controllers
             {
                 ViewBag.Response = "Unknown Error";
             }
-            else if(response.Code == 100)
+            else if(response.ResponseCode == 100)
             {
                 return RedirectToAction("Login", "Account");
             }
             else
             {
-                ViewBag.Response = response.Message;
+                ViewBag.Response = response.ResponseMessage;
             }
             return View(model);
         }
@@ -60,7 +60,7 @@ namespace AdMe.Web.Controllers
             {
                 ViewBag.Response = "Unknown Error";
             }
-            else if(response.Code == 100)
+            else if(response.ResponseCode == 100)
             {
                 HttpContext.Session.SetString("User", model.Username);
                 HttpContext.Session.SetString("SessionId", RandomStringGenerator.GenerateString());
@@ -68,7 +68,7 @@ namespace AdMe.Web.Controllers
             }
             else
             {
-                ViewBag.Response = response.Message;
+                ViewBag.Response = response.ResponseMessage;
             }
             return View(model);
         }
