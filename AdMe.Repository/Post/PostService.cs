@@ -78,7 +78,7 @@ namespace AdMe.Repository.Post
                     PostId = PostId
                 };
                 DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
-                if(response.ResponseCode == 100)
+                if (response.ResponseCode == 100)
                 {
                     break;
                 }
@@ -103,7 +103,7 @@ namespace AdMe.Repository.Post
                 AllReplies = allReplies
             };
             List<PostModel> replies = _connection.Query<PostModel>(procedure, param2, commandType: CommandType.StoredProcedure).AsList<PostModel>();
-            foreach(var reply in replies)
+            foreach (var reply in replies)
             {
                 post.Replies.Add(reply);
             }

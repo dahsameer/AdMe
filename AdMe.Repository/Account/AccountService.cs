@@ -64,5 +64,52 @@ namespace AdMe.Repository.Account
             UserProfile user = _connection.QueryFirstOrDefault<UserProfile>(procedure, param, commandType: CommandType.StoredProcedure);
             return user;
         }
+
+        public DbResponse GetFollowButtonText(int userId, string username)
+        {
+            string procedure = "AccountProcedure";
+            var param = new
+            {
+                Flag = "GetFollowButtonText",
+                Username = username,
+                UserId2 = userId
+            };
+            DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
+            return response;
+        }
+        public DbResponse ToggleFollow(int userId, string username)
+        {
+            string procedure = "AccountProcedure";
+            var param = new
+            {
+                Flag = "ToggleFollow",
+                Username = username,
+                UserId2 = userId
+            };
+            DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
+            return response;
+        }
+        public List<UserProfile> GetFollowers(int UserId)
+        {
+            string procedure = "AccountProcedure";
+            var param = new
+            {
+                Flag = "GetFollowers",
+                UserId1 = UserId
+            };
+            List<UserProfile> users = _connection.Query<UserProfile>(procedure, param, commandType: CommandType.StoredProcedure).AsList<UserProfile>();
+            return users;
+        }
+        public List<UserProfile> GetFollowings(int UserId)
+        {
+            string procedure = "AccountProcedure";
+            var param = new
+            {
+                Flag = "GetFollowings",
+                UserId1 = UserId
+            };
+            List<UserProfile> users = _connection.Query<UserProfile>(procedure, param, commandType: CommandType.StoredProcedure).AsList<UserProfile>();
+            return users;
+        }
     }
 }

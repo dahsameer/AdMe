@@ -2,8 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AdMe.Model.StaticModel;
 using AdMe.Model.User;
 using AdMe.Repository.Account;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace AdMe.Web.Controllers
@@ -43,6 +45,36 @@ namespace AdMe.Web.Controllers
         {
             UserProfile user = _accountService.GetUserProfile(username);
             return View(user);
+        }
+
+        [HttpGet]
+        public IActionResult GetFollowButtonText(int userId)
+        {
+            string username = HttpContext.Session.GetString("User");
+            DbResponse response = _accountService.GetFollowButtonText(userId, username);
+            return Ok(response);
+        }
+
+        [HttpPost]
+        public IActionResult ToggleButton(int userId)
+        {
+            string username = HttpContext.Session.GetString("User");
+            DbResponse response = _accountService.ToggleFollow(userId, username);
+            return Ok(response);
+        }
+
+        [HttpGet]
+        public IActionResult GetFollowers(int UserId)
+        {
+            List<UserProfile> users = _accountService.GetFollowers(UserId);
+            return Ok(users);
+        }
+
+        [HttpGet]
+        public IActionResult GetFollowings(int UserId)
+        {
+            List<UserProfile> users = _accountService.GetFollowings(UserId);
+            return Ok(users);
         }
     }
 }

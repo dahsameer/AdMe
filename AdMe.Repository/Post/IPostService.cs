@@ -11,5 +11,6 @@ namespace AdMe.Repository.Post
         DbResponse AddPost(string postContent, string username);
         List<string> GetPosts(string username);
         PostModel GetPostById(string postId, bool allReplies);
+        
     }
 }
