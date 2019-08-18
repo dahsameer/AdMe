@@ -7,15 +7,15 @@ CREATE OR ALTER PROCEDURE AccountProcedure
 						  @Fullname     nvarchar(100) = NULL, 
 						  @Email        nvarchar(100) = NULL, 
 						  @Gender       nvarchar(10)  = NULL, 
-						  @DateOfBirth  date          = NULL, 
-						  @JoinedDate   date          = NULL, 
+						  @DateOfBirth  date          = NULL,
 						  @Password     nvarchar(200) = NULL, 
 						  @About        nvarchar(250) = NULL, 
 						  @City         nvarchar(100) = NULL, 
 						  @Country      nvarchar(100) = NULL, 
 						  @Photo        nvarchar(100) = NULL,
 						  @UserId1		INT			  = NULL,
-						  @UserId2		INT			  = NULL
+						  @UserId2		INT			  = NULL,
+						  @Search		NVARCHAR(50)  = NULL
 )
 AS
 	SET NOCOUNT ON;
@@ -28,10 +28,12 @@ BEGIN
 			BEGIN
 			    SELECT 101 AS ResponseCode, 'Username Already taken' AS ResponseMessage, '' AS ResponseId;
 			END
+
 			IF EXISTS (SELECT 'A' FROM dbo.tblUser WHERE Email=@Email)
 			BEGIN
 			    SELECT 101 AS ResponseCode, 'Email already registered' AS ResponseMessage, '' AS ResponseId;
 			END
+
 			ELSE
 			BEGIN
 			    INSERT INTO dbo.tblUser( Username, Fullname, Email, Gender, DateOfBirth, JoinedDate, [Password] )
@@ -104,11 +106,27 @@ BEGIN
 		END
 		IF @Flag='GetFollowers'
 		BEGIN
-		    SELECT u2.Username, u2.Fullname, u2.Email FROM dbo.tblFollow f INNER JOIN dbo.tblUser u1 ON f.FollowedUser=u1.Id INNER JOIN dbo.tblUser u2 ON f.FollowedBy=u2.Id WHERE u1.Id=@UserId1
+		    SELECT u2.Username, u2.Fullname, u2.Email, u2.Photo FROM dbo.tblFollow f INNER JOIN dbo.tblUser u1 ON f.FollowedUser=u1.Id INNER JOIN dbo.tblUser u2 ON f.FollowedBy=u2.Id WHERE u1.Id=@UserId1
 		END
 		IF @Flag='GetFollowings'
 		BEGIN
-		    SELECT u1.Username, u1.Fullname, u1.Email FROM dbo.tblFollow f INNER JOIN dbo.tblUser u1 ON f.FollowedUser=u1.Id INNER JOIN dbo.tblUser u2 ON f.FollowedBy=u2.Id WHERE u2.Id=@UserId1
+		    SELECT u1.Username, u1.Fullname, u1.Email, u1.Photo FROM dbo.tblFollow f INNER JOIN dbo.tblUser u1 ON f.FollowedUser=u1.Id INNER JOIN dbo.tblUser u2 ON f.FollowedBy=u2.Id WHERE u2.Id=@UserId1
+		END
+		IF @Flag='UpdateUser'
+		BEGIN
+		    UPDATE dbo.tblUser SET Fullname = ISNULL(@Fullname, Fullname),
+								   Email = ISNULL(@Email, Email),
+								   Gender = ISNULL(@Gender, Gender),
+								   City = ISNULL(@City, City),
+								   Country = ISNULL(@Country, Country),
+								   Photo = ISNULL(@Photo, Photo),
+								   About = ISNULL(@About, About)
+			WHERE Username=@Username
+			SELECT 100 AS ResponseCode, 'Successfully Updated profile' AS ResponseMessage, '' AS ResponseId;
+		END
+		IF @Flag='Search'
+		BEGIN
+		    SELECT TOP(5) Username FROM dbo.tblUser WHERE LOWER(Fullname) LIKE '%'+@Search+'%' ORDER BY Fullname DESC
 		END
 	END TRY
 	BEGIN CATCH

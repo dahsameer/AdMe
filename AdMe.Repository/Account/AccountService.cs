@@ -111,5 +111,35 @@ namespace AdMe.Repository.Account
             List<UserProfile> users = _connection.Query<UserProfile>(procedure, param, commandType: CommandType.StoredProcedure).AsList<UserProfile>();
             return users;
         }
+        public DbResponse UpdateUser(UserProfile model)
+        {
+            string procedure = "AccountProcedure";
+            var param = new
+            {
+                Flag = "UpdateUser",
+                Fullname = model.Fullname,
+                City = model.City,
+                Country = model.Country,
+                Username = model.Username,
+                Photo = model.Photo,
+                About = model.About
+
+            };
+            DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
+            return response;
+        }
+
+        public List<string> SearchPeople(string content, string username)
+        {
+            string procedure = "AccountProcedure";
+            var param = new
+            {
+                Flag = "Search",
+                Search = content.ToLower(),
+                Username = username
+            };
+            var sp = _connection.Query<string>(procedure, param, commandType: CommandType.StoredProcedure).ToList();
+            return sp;
+        }
     }
 }

@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Text;
 using AdMe.Model.Post;
 using AdMe.Model.StaticModel;
+using AdMe.Shared.Helpers.Algorithm;
 using AdMe.Shared.Helpers.StaticData;
 using Dapper;
 using Microsoft.Extensions.Configuration;
@@ -32,7 +34,8 @@ namespace AdMe.Repository.Post
                 Flag = "AddPost",
                 Username = username,
                 PostContent = postContent,
-                PostId = GetNewPostId()
+                PostId = GetNewPostId(),
+                PostKeywords = string.Join(',',EdgerankImplementation.keywordsExtraction(postContent))
             };
             DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
             return response;
@@ -47,7 +50,8 @@ namespace AdMe.Repository.Post
                 Username = username,
                 PostContent = postContent,
                 PostId = GetNewPostId(),
-                ParentPostId = parentId
+                ParentPostId = parentId,
+                PostKeywords = string.Join(',', EdgerankImplementation.keywordsExtraction(postContent.ToLower()))
             };
             DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
             return response;
@@ -59,6 +63,26 @@ namespace AdMe.Repository.Post
             var param = new
             {
                 Flag = "GetPost",
+                Username = username
+            };
+            List<PostAlgorithmModel> posts = _connection.Query<PostAlgorithmModel>(procedure, param, commandType: CommandType.StoredProcedure).AsList<PostAlgorithmModel>();
+            var param2 = new
+            {
+                Flag = "GetKeywords",
+                Username = username
+            };
+            List<string> allKeywords = _connection.Query<string>(procedure, param2, commandType: CommandType.StoredProcedure).AsList<string>();
+            List<PostAlgorithmModel> sorted = EdgerankImplementation.SortPost(posts, allKeywords);
+            return sorted.Select(x => x.PostId).ToList();
+        }
+
+        public List<string> GetTimelinePosts(int userid, string username)
+        {
+            string procedure = "PostProcedure";
+            var param = new
+            {
+                Flag = "GetTimelinePost",
+                UserId = userid,
                 Username = username
             };
             List<string> posts = _connection.Query<string>(procedure, param, commandType: CommandType.StoredProcedure).AsList<string>();
@@ -86,13 +110,14 @@ namespace AdMe.Repository.Post
             return PostId;
         }
 
-        public PostModel GetPostById(string postId, bool allReplies)
+        public PostModel GetPostById(string postId, bool allReplies, string username)
         {
             string procedure = "PostProcedure";
             var param1 = new
             {
                 Flag = "GetPostById",
-                PostId = postId
+                PostId = postId,
+                Username = username
             };
             PostModel post = _connection.QueryFirstOrDefault<PostModel>(procedure, param1, commandType: CommandType.StoredProcedure);
 
@@ -108,6 +133,51 @@ namespace AdMe.Repository.Post
                 post.Replies.Add(reply);
             }
             return post;
+        }
+
+        public DbResponse ToggleLike(string postid, string username)
+        {
+            string procedure = "PostProcedure";
+            var param = new
+            {
+                Flag = "ToggleLike",
+                Username = username,
+                PostId = postid
+            };
+            DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
+            return response;
+        }
+
+        public List<PostAlgorithmModel> GetPostsApi(string username)
+        {
+            string procedure = "PostProcedure";
+            var param = new
+            {
+                Flag = "GetPost",
+                Username = username
+            };
+            List<PostAlgorithmModel> posts = _connection.Query<PostAlgorithmModel>(procedure, param, commandType: CommandType.StoredProcedure).AsList<PostAlgorithmModel>();
+            var param2 = new
+            {
+                Flag = "GetKeywords",
+                Username = username
+            };
+            List<string> allKeywords = _connection.Query<string>(procedure, param2, commandType: CommandType.StoredProcedure).AsList<string>();
+            List<PostAlgorithmModel> sorted = EdgerankImplementation.SortPost(posts, allKeywords);
+            return sorted;
+        }
+
+        public List<string> SearchPost(string content, string username)
+        {
+            string procedure = "PostProcedure";
+            var param = new
+            {
+                Flag = "Search",
+                Search = content.ToLower(),
+                Username = username
+            };
+            var sp = _connection.Query<string>(procedure, param, commandType: CommandType.StoredProcedure).ToList();
+            return sp;
         }
     }
 }

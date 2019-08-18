@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -17,5 +18,6 @@ namespace AdMe.Model.User
         public string Country { get; set; }
         public string Gender { get; set; }
         public string Photo { get; set; }
+        public IFormFile Photofile { get; set; }
     }
 }

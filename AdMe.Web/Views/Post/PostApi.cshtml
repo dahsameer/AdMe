@@ -1,0 +1,40 @@
+﻿@model List<AdMe.Model.Post.PostAlgorithmModel>
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PostApi</title>
+</head>
+<body>
+    <table border="1px">
+        <tr>
+            <th>Post Id</th>
+            <th>Post Content</th>
+            <th>Affinity Score</th>
+            <th>Epsilon(percentage similarity)</th>
+            <th>Post Gamma</th>
+            <th>Time Decay</th>
+            <th>Post Weight</th>
+            <th>Keywords</th>
+        </tr>
+        @foreach (var singleRow in Model)
+        {
+            <tr>
+                <td>@singleRow.PostId</td>
+                <td>@singleRow.PostContent</td>
+                <td>@singleRow.AffinityScore</td>
+                <td>@singleRow.Epsilon</td>
+                <td>@singleRow.Gamma</td>
+                <td>@singleRow.TimeDecay</td>
+                <td>@singleRow.PostWeight</td>
+                <td>@singleRow.PostKeywords</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>

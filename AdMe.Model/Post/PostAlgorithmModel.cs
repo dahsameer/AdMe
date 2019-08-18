@@ -1,24 +1,15 @@
-﻿using AdMe.Model.StaticModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace AdMe.Model.Post
 {
-    public class PostModel : DbResponse
+    public class PostAlgorithmModel
     {
-        public PostModel()
-        {
-            Replies = new List<PostModel>();
-        }
         public string PostId { get; set; }
         public string PostContent { get; set; }
-        public string Username { get; set; }
-        public string Fullname { get; set; }
+        public int Poster { get; set; }
         public DateTime PostedTime { get; set; }
-        public List<PostModel> Replies{ get ;set; }
-        public int Likes { get; set; }
-        public string Photo { get; set; }
         public double AffinityScore { get; set; }
         public string PostKeywords { get; set; }
         public double Epsilon { get; set; }
@@ -27,4 +18,5 @@ namespace AdMe.Model.Post
         public double PostWeight { get; set; }
         public bool Interacted { get; set; }
     }
+
 }

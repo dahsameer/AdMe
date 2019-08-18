@@ -1,0 +1,103 @@
+﻿@model AdMe.Model.Others.Search
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Search";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div class="page-contents">
+    <div class="container">
+        <div class="row">
+
+            <!-- Newsfeed Common Side Bar Left
+            ================================================= -->
+            <div style="margin-top: 20px;" class="col-md-3 static">
+                <div class="profile-card">
+                    <img src="@Context.Session.GetString("Photo")" alt="user" class="profile-photo" />
+                    <h5><a href="/user/@Context.Session.GetString("User")" class="text-white">@Context.Session.GetString("Fullname")</a></h5>
+                    <a href="#" class="text-white"><i class="ion ion-android-person-add"></i> @Context.Session.GetString("User")</a>
+                </div><!--profile card ends-->
+                <ul class="nav-news-feed">
+                    <li><i class="icon ion-ios-paper"></i><div><a href="/">My Newsfeed</a></div></li>
+                    <li><i class="icon ion-ios-people"></i><div><a href="/user/@Context.Session.GetString("User")/followers">Followers</a></div></li>
+                    <li><i class="icon ion-ios-people-outline"></i><div><a href="/user/@Context.Session.GetString("User")/following">Following</a></div></li>
+                </ul><!--news-feed links ends-->
+            </div>
+            <div class="col-md-7">
+                
+                <!-- Post Content
+                ================================================= -->
+                <div id="PostViewDiv">
+                    <div id="SearchPost">
+                        <h2>Posts</h2>
+                        @foreach (var post in Model.posts)
+                        {
+                            <div class="post-content" style="" data-postid="@post.PostId">
+                                <div class="post-container">
+                                    <img src="@post.Photo" alt="user" class="profile-photo-md pull-left">
+                                    <div class="post-detail">
+                                        <div class="user-info">
+                                            <h5><a href="/user/@post.Username" class="profile-link">@post.Fullname</a></h5>
+                                            <p class="text-muted">@post.PostedTime</p>
+                                        </div>
+                                        <div class="reaction">
+                                            <a class="btn @post.ResponseId likebutton"><i class="icon ion-thumbsup"></i> @post.Likes</a>
+                                        </div>
+                                        <div class="line-divider"></div>
+                                        <div class="post-text">
+                                            <p>@post.PostContent</p>
+                                        </div>
+                                        <div class="line-divider"></div>
+                                        <div class="ReplyField">
+                                            @foreach (var reply in post.Replies)
+                                            {
+                                                <div class="post-comment">
+                                                    <img src="@reply.Photo" alt="" class="profile-photo-sm">
+                                                    <p><a href="/user/@reply.Photo" class="profile-link">@reply.Fullname </a> @reply.PostContent</p>
+                                                </div>
+                                            }
+
+                                        </div>
+                                        <div class="post-comment">
+                                            <img src="@Context.Session.GetString("Photo")" alt="" class="profile-photo-sm">
+                                            <input type="text" class="form-control ReplyBox" placeholder="Post a comment">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div id="SearchPeople">
+                        <h2>People</h2>
+                        <div class="friend-list">
+                            <div class="row" id="friendList">
+                                @foreach (var users in Model.users)
+                                {
+                                    <div style="" class="followcard">
+                                        <div class="friend-card">
+                                            <img src="/images/bg.jpg" alt="profile-cover" class="img-responsive cover">
+                                            <div class="card-info">
+                                                <img src="@users.Photo" alt="user" class="profile-photo-lg">
+                                                <div class="friend-info">
+                                                    <h5><a href="/user/@users.Username" class="profile-link">@users.Fullname</a></h5>
+                                                    <p>@users.Email</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+
+}

@@ -63,6 +63,9 @@ namespace AdMe.Web.Controllers
             else if(response.ResponseCode == 100)
             {
                 HttpContext.Session.SetString("User", model.Username);
+                var self = _accountService.GetUserProfile(model.Username);
+                HttpContext.Session.SetString("Fullname", self.Fullname);
+                HttpContext.Session.SetString("Photo", self.Photo);
                 HttpContext.Session.SetString("SessionId", RandomStringGenerator.GenerateString());
                 return RedirectToAction("Index", "Home");
             }

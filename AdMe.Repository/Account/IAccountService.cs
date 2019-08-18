@@ -15,5 +15,7 @@ namespace AdMe.Repository.Account
         DbResponse ToggleFollow(int userId, string username);
         List<UserProfile> GetFollowers(int UserId);
         List<UserProfile> GetFollowings(int UserId);
+        DbResponse UpdateUser(UserProfile model);
+        List<string> SearchPeople(string content, string username);
     }
 }
