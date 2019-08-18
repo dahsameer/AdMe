@@ -1,6 +1,6 @@
 USE [master]
 GO
-/****** Object:  Database [AdMe]    Script Date: 8/18/2019 10:00:52 AM ******/
+/****** Object:  Database [AdMe]    Script Date: 8/18/2019 9:34:32 PM ******/
 CREATE DATABASE [AdMe]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -79,7 +79,7 @@ ALTER DATABASE [AdMe] SET QUERY_STORE = OFF
 GO
 USE [AdMe]
 GO
-/****** Object:  Table [dbo].[tblFollow]    Script Date: 8/18/2019 10:00:53 AM ******/
+/****** Object:  Table [dbo].[tblFollow]    Script Date: 8/18/2019 9:34:32 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -96,7 +96,7 @@ CREATE TABLE [dbo].[tblFollow](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tblLike]    Script Date: 8/18/2019 10:00:53 AM ******/
+/****** Object:  Table [dbo].[tblLike]    Script Date: 8/18/2019 9:34:32 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -112,7 +112,7 @@ CREATE TABLE [dbo].[tblLike](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tblPost]    Script Date: 8/18/2019 10:00:53 AM ******/
+/****** Object:  Table [dbo].[tblPost]    Script Date: 8/18/2019 9:34:32 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -130,7 +130,7 @@ CREATE TABLE [dbo].[tblPost](
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO
-/****** Object:  Table [dbo].[tblUser]    Script Date: 8/18/2019 10:00:53 AM ******/
+/****** Object:  Table [dbo].[tblUser]    Script Date: 8/18/2019 9:34:32 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -171,7 +171,7 @@ REFERENCES [dbo].[tblUser] ([Id])
 GO
 ALTER TABLE [dbo].[tblPost] CHECK CONSTRAINT [FK_tblPost_tblUser]
 GO
-/****** Object:  StoredProcedure [dbo].[AccountProcedure]    Script Date: 8/18/2019 10:00:53 AM ******/
+/****** Object:  StoredProcedure [dbo].[AccountProcedure]    Script Date: 8/18/2019 9:34:32 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -316,7 +316,7 @@ BEGIN
 	END CATCH;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[PostProcedure]    Script Date: 8/18/2019 10:00:53 AM ******/
+/****** Object:  StoredProcedure [dbo].[PostProcedure]    Script Date: 8/18/2019 9:34:32 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -467,6 +467,19 @@ BEGIN
 		    SELECT @UserId=Id FROM dbo.tblUser WHERE Username=@Username;
 			SELECT TOP(5) p.PostId FROM dbo.tblPost p INNER JOIN dbo.tblFollow f ON f.FollowedUser=p.Poster WHERE f.FollowedBy=@UserId AND p.PostParent IS NULL AND @Search IN (SELECT [value] FROM STRING_SPLIT(p.PostKeywords, ',')) ORDER BY p.PostedTime DESC
 		END
+		IF @Flag='Delete'
+		BEGIN
+		    SELECT @UserId=Id FROM dbo.tblUser WHERE Username=@Username;
+			IF EXISTS(SELECT 'A' FROM dbo.tblPost WHERE PostId=@PostId AND Poster=@UserId)
+			BEGIN
+			    DELETE FROM dbo.tblPost WHERE PostId=@PostId;
+				SELECT 100 AS ResponseCode, 'Deleted post' AS ResponseMessage, '' AS ResponseId;
+			END
+			ELSE
+			BEGIN
+			    SELECT 101 AS ResponseCode, 'Could not delete post' AS ResponseMessage, '' AS ResponseId;
+			END
+		END
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
@@ -477,7 +490,7 @@ BEGIN
     END CATCH;
 END;
 GO
-/****** Object:  StoredProcedure [dbo].[WeeklyDecreaseAffinityScore]    Script Date: 8/18/2019 10:00:53 AM ******/
+/****** Object:  StoredProcedure [dbo].[WeeklyDecreaseAffinityScore]    Script Date: 8/18/2019 9:34:32 PM ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON

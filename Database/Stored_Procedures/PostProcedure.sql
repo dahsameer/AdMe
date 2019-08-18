@@ -144,6 +144,19 @@ BEGIN
 		    SELECT @UserId=Id FROM dbo.tblUser WHERE Username=@Username;
 			SELECT TOP(5) p.PostId FROM dbo.tblPost p INNER JOIN dbo.tblFollow f ON f.FollowedUser=p.Poster WHERE f.FollowedBy=@UserId AND p.PostParent IS NULL AND @Search IN (SELECT [value] FROM STRING_SPLIT(p.PostKeywords, ',')) ORDER BY p.PostedTime DESC
 		END
+		IF @Flag='Delete'
+		BEGIN
+		    SELECT @UserId=Id FROM dbo.tblUser WHERE Username=@Username;
+			IF EXISTS(SELECT 'A' FROM dbo.tblPost WHERE PostId=@PostId AND Poster=@UserId)
+			BEGIN
+			    DELETE FROM dbo.tblPost WHERE PostId=@PostId;
+				SELECT 100 AS ResponseCode, 'Deleted post' AS ResponseMessage, '' AS ResponseId;
+			END
+			ELSE
+			BEGIN
+			    SELECT 101 AS ResponseCode, 'Could not delete post' AS ResponseMessage, '' AS ResponseId;
+			END
+		END
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0

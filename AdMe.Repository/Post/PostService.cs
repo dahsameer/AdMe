@@ -179,5 +179,18 @@ namespace AdMe.Repository.Post
             var sp = _connection.Query<string>(procedure, param, commandType: CommandType.StoredProcedure).ToList();
             return sp;
         }
+
+        public DbResponse DeletePost(string id, string username)
+        {
+            string procedure = "PostProcedure";
+            var param = new
+            {
+                Flag = "Delete",
+                PostId = id,
+                Username = username
+            };
+            DbResponse response = _connection.QueryFirstOrDefault<DbResponse>(procedure, param, commandType: CommandType.StoredProcedure);
+            return response;
+        }
     }
 }

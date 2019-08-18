@@ -21,10 +21,22 @@ namespace AdMe.Web.Controllers
             _postService = postService;
         }
 
+        [Authenticate]
+        [Route("/post/{id}")]
         [HttpGet]
-        public IActionResult Read(string id)
+        public IActionResult Index(string id)
         {
-            return View();
+            if (id == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            string username = HttpContext.Session.GetString("User");
+            var post = _postService.GetPostById(id, true, username);
+            if(post == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            return View(post);
         }
 
         [Authenticate]
@@ -134,6 +146,28 @@ namespace AdMe.Web.Controllers
         {
             List<PostAlgorithmModel> postList = _postService.GetPostsApi(HttpContext.Session.GetString("User"));
             return View(postList);
+        }
+
+        [Authenticate]
+        public IActionResult Delete(string id)
+        {
+            string username = HttpContext.Session.GetString("User");
+            DbResponse response = _postService.DeletePost(id, username);
+            if(response.ResponseCode == 100)
+            {
+                ViewBag.Message = "Successfully deleted post";
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.Message = "Couldn't delete post";
+                var post = _postService.GetPostById(id, true, username);
+                if (post == null)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+                return View(post);
+            }
         }
     }
 }

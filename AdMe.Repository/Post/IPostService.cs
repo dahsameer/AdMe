@@ -16,5 +16,6 @@ namespace AdMe.Repository.Post
         DbResponse ToggleLike(string postid, string username);
         List<PostAlgorithmModel> GetPostsApi(string username);
         List<string> SearchPost(string content, string username);
+        DbResponse DeletePost(string id, string username);
     }
 }

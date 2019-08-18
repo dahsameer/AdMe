@@ -35,7 +35,7 @@ $(document).ready(function () {
             method: "GET",
             success: function (Post) {
                 var postHtml = `
-                    <div class="post-content" style="display: none;" data-postid="${Post.postId}">
+                    <div class="post-content postelem" style="display: none;" data-postid="${Post.postId}">
                         <div class="post-container">
                             <img src="${Post.photo}" alt="user" class="profile-photo-md pull-left" />
                             <div class="post-detail">

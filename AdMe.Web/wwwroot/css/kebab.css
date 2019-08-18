@@ -1,0 +1,74 @@
+/***
+	Bootstrap dropdown container fix
+	for Bootstrap 4 and Material Design Bootstrap
+	Hint : Move out the button or the link declaring the data-toggle="dropdwn" from the .dropdown div
+	Created a dropdown-sm class for smaller dropdowns when using kebabs
+***/
+
+.dropdown-menu.dropdown-unroll {
+    transition: none;
+}
+
+.kebab-link i {
+    font-size: 1.5rem;
+    float: right;
+}
+
+.kebab-link i:active,
+.kebab-link i:hover {
+    color: #4285F4;
+    text-decoration: none;
+}
+
+
+/*Try to delete this setting and you'll see the problem*/
+
+.kebab-dropdown {
+    position: relative;
+}
+
+
+/* material design for dropdown */
+
+.dropdown-sm > .dropdown-menu > .dropdown-item {
+    padding: 5px;
+    margin-left: 0;
+}
+
+.dropdown-menu > .dropdown-item {
+    padding: 1rem;
+    margin-left: 0;
+}
+
+.dropdown-menu > .dropdown-item:hover {
+    box-shadow: 0 8px 17px 0 rgba(0, 0, 0, .2), 0 6px 20px 0 rgba(0, 0, 0, .19);
+    color: white;
+    background: #4285F4;
+}
+
+.collapse-accordion > .card a[data-toggle=collapse] {
+    display: block;
+    padding: .75rem 1.25rem;
+}
+
+    .collapse-accordion > .card a[data-toggle=collapse]:after {
+        /* symbol for "opening" panels */
+        font-family: FontAwesome;
+        font-size: .9rem;
+        content: "\f077";
+        /* adjust as needed */
+        vertical-align: middle;
+        color: grey;
+        /* adjust as needed */
+        transition: all .5s linear;
+        margin-right: 5%;
+        text-decoration: none;
+    }
+
+    .collapse-accordion > .card a[data-toggle=collapse].collapsed:after {
+        content: "\f078";
+    }
+
+.collapse-accordion > .card > .card-header {
+    padding: 0;
+}

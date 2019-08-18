@@ -1,0 +1,80 @@
+﻿@model AdMe.Model.Post.PostModel
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link href="~/css/kebab.css" rel="stylesheet" type="text/css" />
+<div class="page-contents">
+    <div class="container">
+        <div class="row">
+
+            <!-- Newsfeed Common Side Bar Left
+            ================================================= -->
+            <div style="margin-top: 20px;" class="col-md-3 static">
+                <div class="profile-card">
+                    <img src="@Context.Session.GetString("Photo")" alt="user" class="profile-photo" />
+                    <h5><a href="/user/@Context.Session.GetString("User")" class="text-white">@Context.Session.GetString("Fullname")</a></h5>
+                    <a href="#" class="text-white"><i class="ion ion-android-person-add"></i> @Context.Session.GetString("User")</a>
+                </div><!--profile card ends-->
+                <ul class="nav-news-feed">
+                    <li><i class="icon ion-ios-paper"></i><div><a href="/">My Newsfeed</a></div></li>
+                    <li><i class="icon ion-ios-people"></i><div><a href="/user/@Context.Session.GetString("User")/followers">Followers</a></div></li>
+                    <li><i class="icon ion-ios-people-outline"></i><div><a href="/user/@Context.Session.GetString("User")/following">Following</a></div></li>
+                </ul><!--news-feed links ends-->
+            </div>
+            <div class="col-md-7">
+
+                <!-- Post Content
+                ================================================= -->
+                <div id="PostViewDiv">
+                    <div class="post-content" style="" data-postid="@Model.PostId">
+                        <div class="post-container">
+                            <a class="kebab-link" data-toggle="dropdown" data-target="#dropdown1"><i class="fa fa-ellipsis-v"></i></a>
+                            <div class="dropdown kebab-dropdown dropdown-sm" id="dropdown1">
+                                <div class="dropdown-menu dropdown-unroll dropdown-menu-right">
+                                    <a class="dropdown-item" href="/Post/Delete/@Model.PostId">Delete Post</a>
+                                </div>
+                            </div>
+                            <img src="@Model.Photo" alt="user" class="profile-photo-md pull-left">
+                            <div class="post-detail">
+                                <div class="user-info">
+                                    <h5><a href="/user/@Model.Username" class="profile-link">@Model.Fullname</a></h5>
+                                    <p class="text-muted">@Model.PostedTime</p>
+                                </div>
+                                <div class="reaction">
+                                    <a class="btn @Model.ResponseId likebutton"><i class="icon ion-thumbsup"></i> @Model.Likes</a>
+                                </div>
+                                <div class="line-divider"></div>
+                                <div class="post-text">
+                                    <p>@Model.PostContent</p>
+                                </div>
+                                <div class="line-divider"></div>
+                                <div class="ReplyField">
+                                    @foreach (var reply in Model.Replies)
+                                    {
+                                        <div class="post-comment">
+                                            <img src="@reply.Photo" alt="" class="profile-photo-sm">
+                                            <p><a href="/user/@reply.Photo" class="profile-link">@reply.Fullname </a> @reply.PostContent</p>
+                                        </div>
+                                    }
+
+                                </div>
+                                <div class="post-comment">
+                                    <img src="@Context.Session.GetString("Photo")" alt="" class="profile-photo-sm">
+                                    <input type="text" class="form-control ReplyBox" placeholder="Post a comment">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/kebab.js"></script>
+}
